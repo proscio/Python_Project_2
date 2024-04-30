@@ -22,8 +22,82 @@ class Recomender:
                 value = line.strip().split(",")
                 newShow = Show(ID=value[0], typeShow=value[1], Title=value[2], directors=value[3], actors=value[4], avgRating=value[5], countryCode=value[6], dateAired=value[7], releaseYear=value[8], Rating=value[9], duration=value[10], listedIn = value[11], description=value[12])
                 self.__shows[value[0]]= newShow
-    def loadAssosiations():
+    def loadAssosiations(self):
         file = filedialog.askopenfile(title = "Assosiation File", inidialir = os.getcwd())
         with open(file, "r") as assosiationFile:
             for line in assosiationFile:
-                line.strip().split(",")
+                value = line.strip().split(",")
+                if value[0] not in self.__assosiations:
+                    self.__assosiations[value[0]] = {value[1]:1}
+                else:
+                    if value[1] in self.__assosiations[value[0]]:
+                        self.__assosiations[value[0]][value[1]] +=1
+                    else: 
+                        self.__assosiations[value[0]][value[1]] = 1
+                if value[1] not in self.__assosiations:
+                    self.__assosiations[value[1]] = {value[0]:1}
+                else:
+                    if value[0] in self.__assosiations[value[1]]:
+                        self.__assosiations[value[1]][value[0]] +=1
+                    else: 
+                        self.__assosiations[value[1]][value[0]] = 1
+    def getMovieList(self):
+        string = f"Title:\t Duration:\n"
+        for i in self.__shows:
+            if Show.get_type(i) == "Movie":
+                data =  "\n{Show.getTitle(i): 10} | {Show.get_duration(i): 10}"
+            string = string + data
+        return string
+    def getTVlist(self):
+        string = f"Title:\t Duration:\n"
+        for i in self.__shows:
+            if Show.get_type(i) == "TV Show":
+                data =  "\n{Show.getTitle(i): 10} | {Show.get_duration(i): 10}"
+            string = string + data
+        return string 
+    def getBookList(self):
+        string = f"Title:\t Authot: \n"
+        for i in self.__books:
+            data = "\n{Book.getTitle(i):10} | {Book.get_authors(i) : 10}"
+            string = string + data
+        return string
+    def getMoviestats(self):
+        Rating_list, Duration_List, Director_list, Actor_list, Genre_list = [],[],[],[],[],[]
+        for i in self.__shows:
+            if Show.get_type(i) == "Movie":
+                Rating_list.append(Show.getRating(i))
+                Duration_List.append(Show.get_duration(i))
+                Director_list.append(str(Show.get_directors(i)).strip().split("\\"))
+                Actor_list.append(str(Show.get_actors(i)).strip().split("\\"))
+                Genre_list.append(Show.get_genres(i))
+        def most_frequent(list):
+            freq_dict = {}
+            for i in list:
+                if i in freq_dict:
+                    freq_dict[i] += 1
+                else:
+                    freq_dict[i] = 1
+            most_frequent = max(freq_dict, key = freq_dict.get)
+            return most_frequent
+        return f"Most Common Rating: {most_frequent(Rating_list): .2f}\nAverage Length: {most_frequent(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prominent Actor: {most_frequent(Actor_list)}\nLargest Genre: {most_frequent(Genre_list)}"
+    
+    def getTVstats(self): 
+        Rating_list, Duration_List, Actor_list, Genre_list = [],[],[],[],[],[]
+        for i in self.__shows:
+            if Show.get_type(i) == "TV Show":
+                Rating_list.append(Show.getRating(i))
+                Duration_List.append(Show.get_duration(i))
+                Genre_list.append(Show.get_genres(i))
+                Actor_list.append(str(Show.get_actors(i)).strip().split("\\"))
+
+        def most_frequent(list):
+            freq_dict = {}
+            for i in list:
+                if i in freq_dict:
+                    freq_dict[i] += 1
+                else:
+                    freq_dict[i] = 1
+            most_frequent = max(freq_dict, key = freq_dict.get)
+            return most_frequent
+        return f"Most Common Rating: {most_frequent(Rating_list): .2f}\nAverage Length: {most_frequent(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prominent Actor: {most_frequent(Actor_list)}\nLargest Genre: {most_frequent(Genre_list)}"
+    
