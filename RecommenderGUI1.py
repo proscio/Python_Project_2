@@ -11,10 +11,17 @@ class RecommenderGUI:
         self.main.geometry("1200x800")
 
         self.button_frame = tk.Frame(self.main)
-        self.button1 = tk.Button(main, text='Click')
-        self.button1.pack(side="bottom", pady=5)
-        self.button2 = tk.Button(main, text='Click')
-        self.button2.pack(side="bottom", pady=5)
+        self.button_frame.pack(side="bottom", pady=5)
+        self.button1 = tk.Button(self.button_frame, text='Load Shows')
+        self.button1.pack(side="left", padx=80)
+        self.button2 = tk.Button(self.button_frame, text='Load Books')
+        self.button2.pack(side="left", padx=100)
+        self.button3 = tk.Button(self.button_frame, text='Load Recommendations')
+        self.button3.pack(side="left", padx=50)
+        self.button4 = tk.Button(self.button_frame, text='Information')
+        self.button4.pack(side="left", padx=100)
+        self.button5 = tk.Button(self.button_frame, text='Quit')
+        self.button5.pack(side="left", padx=30)
 
         self.notebook = ttk.Notebook(self.main)
 
