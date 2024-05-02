@@ -3,7 +3,6 @@ import tkinter.filedialog as filedialog
 from Book import Book
 from Show import Show
 
-
 class Recommender:
     def __init__(self):
         self.__books = {}
@@ -31,7 +30,7 @@ class Recommender:
                 self.__shows[value[0]] = newShow
 
     def loadAssociations(self):
-        file = filedialog.askopenfilename(title="Association File", inidialir=os.getcwd())
+        file = filedialog.askopenfilename(title="Association File", initialdir=os.getcwd())
         with open(file, "r") as associationFile:
             for line in associationFile:
                 value = line.strip().split(",")
@@ -53,35 +52,35 @@ class Recommender:
     def getMovieList(self):
         string = f"Title:\t Duration:\n"
         for i in self.__shows:
-            if Show.get_type(i) == "Movie":
-                data = "\n{Show.getTitle(i): 10} | {Show.get_duration(i): 10}"
+            if Show.getTypeShow(i) == "Movie":
+                data = f"\n{Show.getTitle(i): 10} | {Show.getDuration(i): 10}"
             string = string + data
         return string
 
     def getTVList(self):
         string = f"Title:\t Duration:\n"
         for i in self.__shows:
-            if Show.get_type(i) == "TV Show":
-                data = "\n{Show.getTitle(i): 10} | {Show.get_duration(i): 10}"
+            if Show.getTypeShow(i) == "TV Show":
+                data = f"\n{Show.getTitle(i): 10} | {Show.getDuration(i): 10}"
             string = string + data
         return string
 
     def getBookList(self):
-        string = f"Title:\t Authot: \n"
+        string = f"Title:\t Author: \n"
         for i in self.__books:
-            data = "\n{Book.getTitle(i):10} | {Book.get_authors(i) : 10}"
+            data = f"\n{Book.getTitle(i):10} | {Book.get_authors(i) : 10}"
             string = string + data
         return string
 
     def getMovieStats(self):
         Rating_list, Duration_List, Director_list, Actor_list, Genre_list = [], [], [], [], [], []
         for i in self.__shows:
-            if Show.get_type(i) == "Movie":
+            if Show.getTypeShow(i) == "Movie":
                 Rating_list.append(Show.getRating(i))
-                Duration_List.append(Show.get_duration(i))
-                Director_list.append(str(Show.get_directors(i)).strip().split("\\"))
-                Actor_list.append(str(Show.get_actors(i)).strip().split("\\"))
-                Genre_list.append(Show.get_genres(i))
+                Duration_List.append(Show.getDuration(i))
+                Director_list.append(str(Show.getDirectors(i)).strip().split("\\"))
+                Actor_list.append(str(Show.getActors(i)).strip().split("\\"))
+                Genre_list.append(Show.getGenres(i))
 
         def most_frequent(list):
             freq_dict = {}
@@ -93,16 +92,33 @@ class Recommender:
             most_frequent = max(freq_dict, key=freq_dict.get)
             return most_frequent
 
-        return f"Most Common Rating: {most_frequent(Rating_list): .2f}\nAverage Length: {most_frequent(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prominent Actor: {most_frequent(Actor_list)}\nLargest Genre: {most_frequent(Genre_list)}"
+        def frequencies(list):
+            ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0}
+            ratingString = "Ratings:\n"
+            for i in list:
+                ratings[i] += 1
+
+            for i in ratings:
+                ratingString += (i + " " + ((i / len(ratings)) + "%\n"))
+            return ratingString
+
+        def mean(list):
+            total_sum = 0
+            for i in list:
+                total_sum += i
+            average = total_sum / len(list)
+            return average
+
+        return f"{frequencies(Rating_list)}Length: {mean(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prolific Actor: {most_frequent(Actor_list)}\nMost Frequenct Genre: {most_frequent(Genre_list)}"
 
     def getTVStats(self):
         Rating_list, Duration_List, Actor_list, Genre_list = [], [], [], [], [], []
         for i in self.__shows:
-            if Show.get_type(i) == "TV Show":
+            if Show.getTypeShow(i) == "TV Show":
                 Rating_list.append(Show.getRating(i))
-                Duration_List.append(Show.get_duration(i))
-                Genre_list.append(Show.get_genres(i))
-                Actor_list.append(str(Show.get_actors(i)).strip().split("\\"))
+                Duration_List.append(Show.getDuration(i))
+                Genre_list.append(Show.getGenres(i))
+                Actor_list.append(str(Show.getActors(i)).strip().split("\\"))
 
         def most_frequent(list):
             freq_dict = {}
@@ -114,4 +130,50 @@ class Recommender:
             most_frequent = max(freq_dict, key=freq_dict.get)
             return most_frequent
 
-        return f"Most Common Rating: {most_frequent(Rating_list): .2f}\nAverage Length: {most_frequent(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prominent Actor: {most_frequent(Actor_list)}\nLargest Genre: {most_frequent(Genre_list)}"
+        def frequencies(list):
+            ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0}
+            ratingString = "Ratings:\n"
+            for i in list:
+                ratings[i] += 1
+
+            for i in ratings:
+                ratingString += (i + " " + ((i / len(ratings)) + "%\n"))
+            return ratingString
+
+        def mean(list):
+            total_sum = 0
+            for i in list:
+                total_sum += i
+            average = total_sum / len(list)
+            return average
+
+        return f"{frequencies(Rating_list)}\nAverage Length: {mean(Duration_List): .2f}\nMost Prominent Actor: {most_frequent(Actor_list)}\nLargest Genre: {most_frequent(Genre_list)}"
+
+    def getBookStats(self):
+        PageCount_list, Author_list, Publisher_list = [], [], []
+        for i in self.__books:
+            PageCount_list.append(Book.getPageCount(i))
+            Author_list.append(Book.getAuthors(i))
+            Publisher_list.append(Book.getPublisher(i))
+
+        def most_frequent(list):
+            freq_dict = {}
+            for i in list:
+                if i in freq_dict:
+                    freq_dict[i] += 1
+                else:
+                    freq_dict[i] = 1
+            most_frequent = max(freq_dict, key=freq_dict.get)
+            return most_frequent
+
+        def mean(list):
+            total_sum = 0
+            for i in list:
+                total_sum += i
+            average = total_sum / len(list)
+            return average
+
+        return f"Average Page Count: {mean(PageCount_list): .2f}\nMost Prolific Author: {most_frequent(Author_list)}\nMost Prolific Publisher: {most_frequent(Publisher_list)}"
+def searchTVMovies(typeShow, title, director, actors, genre):
+    if typeShow != "Movie" or "TV Show":
+        print("start here")

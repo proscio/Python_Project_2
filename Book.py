@@ -1,7 +1,8 @@
-from media import Media
+from Media import Media
+
 class Book(Media):
-    def __init__(self, authors, isbn, isbn13, languageCode, pageCount, numRatings, publicationDate, publisher):
-        super().__init__()     
+    def __init__(self, id, title, averageRating, authors, isbn, isbn13, languageCode, pageCount, numRatings, publicationDate, publisher):
+        super().__init__(id, title, averageRating)
         self.__authors = authors
         self.__isbn = isbn
         self.__isbn13 = isbn13
@@ -11,27 +12,50 @@ class Book(Media):
         self.__publicationDate = publicationDate
         self.__publisher = publisher
 
-    def get_authors(self):
-        return self.__authors
-    
-    def get_isbn(self):
-        return self.__isbn
-    
-    def get_isbn13(self):
-        return self.__isbn13
-    
-    def get_language_code(self):
-        return self.__languageCode
-    
-    def get_page_count(self):
-        return self.__pageCount
-    
-    def get_num_ratings(self):
-        return self.__numRatings
-    
-    def get_publication_date(self):
-        return self.__publicationDate
-    
-    def get_publisher(self):
-        return self.__publisher
-    
+    def getAuthors(self):
+        return self.authors
+
+    def getIsbn(self):
+        return self.isbn
+
+    def getIsbn13(self):
+        return self.isbn13
+
+    def getLanguageCode(self):
+        return self.languageCode
+
+    def getPageCount(self):
+        return self.pageCount
+
+    def getNumRatings(self):
+        return self.numRatings
+
+    def getPublicationDate(self):
+        return self.publicationDate
+
+    def getPublisher(self):
+        return self.publisher
+
+    def setAuthors(self, authors):
+        self.authors = authors
+
+    def setIsbn(self, isbn):
+        self.isbn = isbn
+
+    def setIsbn13(self, isbn13):
+        self.isbn13 = isbn13
+
+    def setLanguageCode(self, languageCode):
+        self.languageCode = languageCode
+
+    def setPageCount(self, pageCount):
+        self.pageCount = pageCount
+
+    def setNumRatings(self, numRatings):
+        self.numRatings = numRatings
+
+    def setPublicationDate(self, publicationDate):
+        self.publicationDate = publicationDate
+
+    def setPublisher(self, publisher):
+        self.publisher = publisher
