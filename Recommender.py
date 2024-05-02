@@ -1,5 +1,6 @@
 import os
 import tkinter.filedialog as filedialog
+from tkinter import messagebox
 from Book import Book
 from Show import Show
 
@@ -99,7 +100,7 @@ class Recommender:
                 ratings[i] += 1
 
             for i in ratings:
-                ratingString += (i + " " + ((i / len(ratings)) + "%\n"))
+                ratingString += (i + " " + str((i / len(ratings)) * 100) + "%\n")
             return ratingString
 
         def mean(list):
@@ -137,7 +138,7 @@ class Recommender:
                 ratings[i] += 1
 
             for i in ratings:
-                ratingString += (i + " " + ((i / len(ratings)) + "%\n"))
+                ratingString += (i + " " + str((i / len(ratings)) * 100) + "%\n")
             return ratingString
 
         def mean(list):
@@ -174,6 +175,94 @@ class Recommender:
             return average
 
         return f"Average Page Count: {mean(PageCount_list): .2f}\nMost Prolific Author: {most_frequent(Author_list)}\nMost Prolific Publisher: {most_frequent(Publisher_list)}"
-def searchTVMovies(typeShow, title, director, actors, genre):
-    if typeShow != "Movie" or "TV Show":
-        print("start here")
+def searchTVMovies(self, type, title, director, actor, genre):
+    if type not in ["Movie", "TV Show"]:
+        messagebox.showerror("Error", "Please select 'Movie' or 'TV Show' from Type.")
+        return "No Results"
+
+    if not (title or director or actor or genre):
+        messagebox.showerror("Error", "Please enter information for Title, Director, Actor, and/or Genre.")
+        return "No Results"
+
+    results = ""
+    for show_id, show in self.__shows.items():
+        if (type == "Movie" and show.getTypeShow() == "Movie") or (type == "TV Show" and show.getTypeShow() == "TV Show"):
+            if (not title or title.lower() in show.getTitle().lower()) and \
+               (not director or director.lower() in show.getDirectors().lower()) and \
+               (not actor or actor.lower() in show.getActors().lower()) and \
+               (not genre or genre.lower() in show.getGenres().lower()):
+
+                results += f"Title: {show.getTitle()}\n"
+                results += f"Director: {show.getDirectors()}\n"
+                results += f"Actors: {show.getActors()}\n"
+                results += f"Genre: {show.getGenres()}\n"
+    if not results:
+        return "No Results"
+    return results
+
+def searchBooks(self, title, author, publisher):
+    if not (title or author or publisher):
+        messagebox.showerror("Error", "Please enter information for Title, Author, and/or Publisher.")
+        return "No Results"
+
+    results = ""
+    for book_id, book in self.__books.items():
+         if (not title or title.lower() in book.getTitle().lower()) and \
+            (not author or author.lower() in book.getAuthors().lower()) and \
+            (not publisher or publisher.lower() in book.getPublisher().lower()):
+
+             results += f"Title: {book.getTitle()}\n"
+             results += f"Author: {book.getAuthors()}\n"
+             results += f"Publisher: {book.getPublisher()}\n"
+    if not results:
+        return "No Results"
+    return results
+
+
+def getRecommendations(self, type, title):
+    if type == "Movie" or type == "TV Show":
+        show_id = None
+        for show_id, show in self.__shows.items():
+            if show.getTypeShow() == type and show.getTitle().lower() == title.lower():
+                break
+        else:
+            messagebox.showwarning("Warning", f"No recommendations found for {title}.")
+            return "No Results"
+
+        recommendations = self.__associations.get(show_id, [])
+        if not recommendations:
+            return "No Results"
+
+        results = ""
+        for recommendation_id in recommendations:
+            if recommendation_id in self.__books:
+                book = self.__books[recommendation_id]
+                results += f"Title: {book.getTitle()}\n"
+                results += f"Author: {book.getAuthors()}\n"
+                results += f"Publisher: {book.getPublisher()}\n\n"
+    elif type == "Book":
+        book_id = None
+        for book_id, book in self.__books.items():
+            if book.getTitle().lower() == title.lower():
+                break
+        else:
+            messagebox.showwarning("Warning", f"No recommendations found for {title}.")
+            return "No Results"
+
+        recommendations = self.__associations.get(book_id, [])
+        if not recommendations:
+            return "No Results"
+
+        results = ""
+        for recommendation_id in recommendations:
+            if recommendation_id in self.__shows:
+                show = self.__shows[recommendation_id]
+                results += f"Title: {show.getTitle()}\n"
+                results += f"Director: {show.getDirectors()}\n"
+                results += f"Actors: {show.getActors()}\n"
+                results += f"Genre: {show.getGenres()}\n\n"
+    else:
+        messagebox.showerror("Error", "Invalid type. Please specify 'Movie', 'TV Show', or 'Book'.")
+        return "No Results"
+
+    return results
