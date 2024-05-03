@@ -4,24 +4,25 @@ from tkinter import scrolledtext
 from Recommender import Recommender
 
 class RecommenderGUI:
-    Recommender = Recommender()
     def __init__(self, main):
         self.main = main
         self.main.title("Media Recommender")
         self.main.geometry("1200x800")
 
+        self.recommender = Recommender()
+
         self.button_frame = tk.Frame(self.main)
         self.button_frame.pack(side="bottom", pady=5)
-        self.button1 = tk.Button(self.button_frame, text='Load Shows')
-        self.button1.pack(side="left", padx=80)
+        self.button1 = tk.Button(self.button_frame, text='Load Shows', command=self.loadShows)
+        self.button1.pack(side="left", padx=70)
         self.button2 = tk.Button(self.button_frame, text='Load Books')
-        self.button2.pack(side="left", padx=100)
+        self.button2.pack(side="left", padx=70)
         self.button3 = tk.Button(self.button_frame, text='Load Recommendations')
-        self.button3.pack(side="left", padx=50)
+        self.button3.pack(side="left", padx=70)
         self.button4 = tk.Button(self.button_frame, text='Information')
-        self.button4.pack(side="left", padx=100)
+        self.button4.pack(side="left", padx=70)
         self.button5 = tk.Button(self.button_frame, text='Quit')
-        self.button5.pack(side="left", padx=30)
+        self.button5.pack(side="left", padx=70)
 
         self.notebook = ttk.Notebook(self.main)
 
@@ -46,19 +47,26 @@ class RecommenderGUI:
         self.tab1.grid_rowconfigure(0, weight=1)
         self.tab1.grid_rowconfigure(1, weight=1)
 
-        self.text_area = scrolledtext.ScrolledText(self.tab1, state='disabled')
-        self.text_area.grid(row=0, column=0, sticky="nsew")
+        self.text_area1 = scrolledtext.ScrolledText(self.tab1)
+        self.text_area1.grid(row=0, column=0, sticky="nsew")
 
-        initial_text = "This is a non-editable text area."
-        self.text_area.configure(state='normal')
-        self.text_area.insert('end', initial_text)
-        self.text_area.configure(state='disabled')
+        initial_text1 = "No data has been loaded yet."
+        self.text_area1.insert('end', initial_text1)
+        self.text_area1.configure(state='disabled')
 
         self.text_area2 = tk.Text(self.tab1)
         self.text_area2.grid(row=1, column=0, sticky="nsew")
 
-        self.text_area2.insert(tk.END, "poopy")
+        initial_text2 = "No data has been loaded yet."
+        self.text_area2.insert('end', initial_text2)
+        self.text_area2.configure(state='disabled')
 
+    def loadShows(self):
+        self.recommender.loadShows()
+        self.recommender.getMovieList()
+        self.recommender.getMovieStats()
+        self.recommender.getTVList()
+        self.recommender.getTVStats()
 
 def main():
     root = tk.Tk()
