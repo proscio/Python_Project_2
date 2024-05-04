@@ -13,6 +13,7 @@ class Recommender:
     def loadBooks(self):
         file = filedialog.askopenfilename(title="Book File", initialdir=os.getcwd())
         with open(file, "r") as bookFile:
+            next(bookFile)
             for line in bookFile:
                 value = line.strip().split(",")
                 newBook = Book(id=value[0], title=value[1], authors=value[2], averageRating=value[3], isbn=value[4],
@@ -23,6 +24,7 @@ class Recommender:
     def loadShows(self):
         file = filedialog.askopenfilename(title="Show File", initialdir=os.getcwd())
         with open(file, "r") as showFile:
+            next(showFile)
             for line in showFile:
                 value = line.strip().split(",")
                 if value[0] == 'show_id':
@@ -53,28 +55,65 @@ class Recommender:
                         self.__associations[value[1]][value[0]] = 1
 
     def getMovieList(self):
-        string = f"Title:\t Duration:\n"
+        string = ""
+        width = 0
         for i in self.__shows:
-            data = ""
             if Show.getTypeShow(self.__shows[i]) == "Movie":
-                data = f"\n{Show.getTitle(self.__shows[i]):10} | {Show.getDuration(self.__shows[i]):10}"
-            string = string + data
+                title_length = len(Show.getTitle(self.__shows[i]))
+                if title_length > width:
+                    width = title_length
+        padding = " " * (width-(len("Title")+1))    
+        string += f"Title:{padding} | Duration:"
+        for i in self.__shows:
+            if Show.getTypeShow(self.__shows[i]) == "Movie":
+                data = ""  
+                title = Show.getTitle(self.__shows[i])
+                duration = Show.getDuration(self.__shows[i])
+                title_length = len(title)
+                padding = " " * (width - title_length)    
+                data = f"\n{title}{padding} | {duration:10}"
+                string += data
         return string
 
+
     def getTVList(self):
-        string = f"Title:\t Duration:\n"
+        string = ""
+        width = 0
         for i in self.__shows:
-            data = ""
             if Show.getTypeShow(self.__shows[i]) == "TV Show":
-                data = f"\n{Show.getTitle(self.__shows[i]):10} | {Show.getDuration(self.__shows[i]):10}"
-            string = string + data
+                title_length = len(Show.getTitle(self.__shows[i]))
+                if title_length > width:
+                    width = title_length
+        padding = " " * (width-(len("Title")+1))    
+        string += f"Title:{padding} | Duration:"
+        for i in self.__shows:
+            if Show.getTypeShow(self.__shows[i]) == "TV Show":
+                data = ""  
+                title = Show.getTitle(self.__shows[i])
+                duration = Show.getDuration(self.__shows[i])
+                title_length = len(title)
+                padding = " " * (width - title_length)    
+                data = f"\n{title}{padding} | {duration:10}"
+                string += data
         return string
 
     def getBookList(self):
-        string = f"Title:\t Author: \n"
+        string = ""
+        width = 0
         for i in self.__books:
-            data = f"\n{Book.getTitle(i):10} | {Book.get_authors(i) : 10}"
-            string = string + data
+            title_length = len(Book.getTitle(self.__books[i]))
+            if title_length > width:
+                width = title_length
+        padding = " " * (width-(len("Title")+1))    
+        string += f"Title:{padding} | Author:"
+        for i in self.__books:
+            data = ""
+            title = Book.getTitle(self.__books[i])
+            author = Book.getAuthors(self.__books[i])
+            title_length = len(title)
+            padding = " " * (width - title_length)    
+            data = f"\n{title}{padding} | {author}"
+            string += data
         return string
 
     def getMovieStats(self):
@@ -107,7 +146,8 @@ class Recommender:
                 ratings[i] += 1
 
             for i in ratings:
-                ratingString += (i + " " + str((ratings[i] / len(list))*100) + "%\n")
+                if ratings[i] != 0:
+                    ratingString += (i + " " + str((ratings[i] / len(list))*100) + "%\n")
             return ratingString
 
         def mean(list):
@@ -145,7 +185,7 @@ class Recommender:
         
         def frequencies(list):
             ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0, "None": 0}
-            ratingString = "Ratings:\n"
+            ratingString = f"Ratings:\n"
             for i in list:
                 if i == 'PG':
                     i = 'TV-PG'
@@ -154,7 +194,8 @@ class Recommender:
                 ratings[i] += 1
 
             for i in ratings:
-                ratingString += (i + " " + str((ratings[i] / len(ratings))) + "%\n")
+                if ratings[i] != 0:
+                    ratingString += (i + " " + str((ratings[i] / len(ratings))) + "%\n")
             return ratingString
 
         def mean(list):
@@ -170,9 +211,10 @@ class Recommender:
     def getBookStats(self):
         PageCount_list, Author_list, Publisher_list = [], [], []
         for i in self.__books:
-            PageCount_list.append(Book.getPageCount(i))
-            Author_list.append(Book.getAuthors(i))
-            Publisher_list.append(Book.getPublisher(i))
+            PageCount_list.append(Book.getPageCount(self.__books[i]))
+            Author_list.append(Book.getAuthors(self.__books[i]))
+            Publisher_list.append(Book.getPublisher(self.__books[i]))
+ 
 
         def most_frequent(list):
             freq_dict = {}
@@ -188,11 +230,11 @@ class Recommender:
         def mean(list):
             total_sum = 0
             for i in list:
-                total_sum += i
+                total_sum += int(i)
             average = total_sum / len(list)
             return average
 
-        return f"Average Page Count: {mean(PageCount_list): .2f}\nMost Prolific Author: {most_frequent(Author_list)}\nMost Prolific Publisher: {most_frequent(Publisher_list)}"
+        return f"Average Page Count: {mean(PageCount_list): .2f} \nMost Prolific Author: {most_frequent(Author_list)}\nMost Prolific Publisher: {most_frequent(Publisher_list)}"
 
     def searchTVMovies(self, type, title, director, actor, genre):
         if type not in ["Movie", "TV Show"]:
