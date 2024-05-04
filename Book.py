@@ -13,49 +13,25 @@ class Book(Media):
         self.__publisher = publisher
 
     def getAuthors(self):
-        return self.authors
+        return self.__authors
 
     def getIsbn(self):
-        return self.isbn
+        return self.__isbn
 
     def getIsbn13(self):
-        return self.isbn13
+        return self.__isbn13
 
     def getLanguageCode(self):
-        return self.languageCode
+        return self.__languageCode
 
     def getPageCount(self):
-        return self.pageCount
+        return self.__pageCount
 
     def getNumRatings(self):
-        return self.numRatings
+        return self.__numRatings
 
     def getPublicationDate(self):
-        return self.publicationDate
+        return self.__publicationDate
 
     def getPublisher(self):
-        return self.publisher
-
-    def setAuthors(self, authors):
-        self.authors = authors
-
-    def setIsbn(self, isbn):
-        self.isbn = isbn
-
-    def setIsbn13(self, isbn13):
-        self.isbn13 = isbn13
-
-    def setLanguageCode(self, languageCode):
-        self.languageCode = languageCode
-
-    def setPageCount(self, pageCount):
-        self.pageCount = pageCount
-
-    def setNumRatings(self, numRatings):
-        self.numRatings = numRatings
-
-    def setPublicationDate(self, publicationDate):
-        self.publicationDate = publicationDate
-
-    def setPublisher(self, publisher):
-        self.publisher = publisher
+        return self.__publisher
