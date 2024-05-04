@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import scrolledtext
+from tkinter import messagebox
 from Recommender import Recommender
 
 class RecommenderGUI:
@@ -13,15 +14,15 @@ class RecommenderGUI:
 
         self.button_frame = tk.Frame(self.main)
         self.button_frame.pack(side="bottom", pady=5)
-        self.button1 = tk.Button(self.button_frame, text='Load Shows', command=self.loadShows)
+        self.button1 = tk.Button(self.button_frame, text='Load Shows', command=self.load_shows)
         self.button1.pack(side="left", padx=70)
-        self.button2 = tk.Button(self.button_frame, text='Load Books')
+        self.button2 = tk.Button(self.button_frame, text='Load Books' , command=self.load_books)
         self.button2.pack(side="left", padx=70)
-        self.button3 = tk.Button(self.button_frame, text='Load Recommendations')
+        self.button3 = tk.Button(self.button_frame, text='Load Recommendations', command=self.load_associations)
         self.button3.pack(side="left", padx=70)
-        self.button4 = tk.Button(self.button_frame, text='Information')
+        self.button4 = tk.Button(self.button_frame, text='Information', command=self.info)
         self.button4.pack(side="left", padx=70)
-        self.button5 = tk.Button(self.button_frame, text='Quit')
+        self.button5 = tk.Button(self.button_frame, text='Quit', command=main.destroy)
         self.button5.pack(side="left", padx=70)
 
         self.notebook = ttk.Notebook(self.main)
@@ -42,31 +43,56 @@ class RecommenderGUI:
 
         self.notebook.pack(expand=1, fill="both")
 
-        # Tab 1 Movies Construction
-        self.tab1.grid_columnconfigure(0, weight=1)
-        self.tab1.grid_rowconfigure(0, weight=1)
-        self.tab1.grid_rowconfigure(1, weight=1)
+        # Call the function to create tabs initially
+        self.update_tabs()
 
-        self.text_area1 = scrolledtext.ScrolledText(self.tab1)
-        self.text_area1.grid(row=0, column=0, sticky="nsew")
+    def update_tabs(self):
+        try:
+            self.create_tab(self.tab1, "Movies", self.recommender.getMovieList(), self.recommender.getMovieStats())
+        except:
+            self.create_tab(self.tab1, "Movies", "No Values Loaded", "No Values Loaded")
 
-        initial_text1 = "No data has been loaded yet."
-        self.text_area1.insert('end', initial_text1)
-        self.text_area1.configure(state='disabled')
+        try:
+            self.create_tab(self.tab2, "TV Shows", self.recommender.getTVList(), self.recommender.getTVStats())
+        except:
+            self.create_tab(self.tab2, "TV Shows", "No Values Loaded", "No Values Loaded")
 
-        self.text_area2 = tk.Text(self.tab1)
-        self.text_area2.grid(row=1, column=0, sticky="nsew")
+        try:
+            self.create_tab(self.tab3, "Books", self.recommender.getBookList(), self.recommender.getBookStats())
+        except:
+            self.create_tab(self.tab3, "Books", "No Values Loaded", "No Values Loaded")
 
-        initial_text2 = "No data has been loaded yet."
-        self.text_area2.insert('end', initial_text2)
-        self.text_area2.configure(state='disabled')
+    def create_tab(self, tab, tab_name, data_list, stats):
+        tab.grid_columnconfigure(0, weight=1)
+        tab.grid_rowconfigure(0, weight=1)
+        tab.grid_rowconfigure(1, weight=1)
 
-    def loadShows(self):
+        text_area1 = scrolledtext.ScrolledText(tab)
+        text_area1.grid(row=0, column=0, sticky="nsew")
+
+        text_area1.insert('end', data_list)
+        text_area1.configure(state='disabled')
+
+        text_area2 = tk.Text(tab)
+        text_area2.grid(row=1, column=0, sticky="nsew")
+
+        text_area2.insert('end', stats)
+        text_area2.configure(state='disabled')
+
+    def info(self):
+        return messagebox.showinfo(title="Media for you!", message="Developed for: Engineering Programming Python\nBy: Gage Iannitelli, Rigoberto Perdomo, and Patrick Roscio")
+
+    def load_shows(self):
         self.recommender.loadShows()
-        self.recommender.getMovieList()
-        self.recommender.getMovieStats()
-        self.recommender.getTVList()
-        self.recommender.getTVStats()
+        self.update_tabs()
+
+    def load_books(self):
+        self.recommender.loadBooks()
+        self.update_tabs()
+
+    def load_associations(self):
+        self.recommender.loadAssociations()
+        self.update_tabs()
 
 def main():
     root = tk.Tk()

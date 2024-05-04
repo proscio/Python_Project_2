@@ -94,8 +94,9 @@ class Recommender:
                         freq_dict[j] += 1
                     else:
                         freq_dict[j] = 1
-            most_frequent = max(freq_dict, key=freq_dict.get)
+                most_frequent = max(freq_dict, key=freq_dict.get)
             return most_frequent
+         
 
         def frequencies(list):
             ratings = {"R": 0, "ALL": 0, "18+": 0, "7+": 0, "13+": 0, "16+": 0, "None": 0, "NR": 0, "PG-13": 0, "G": 0, "PG": 0, "AGES_16_": 0}
@@ -141,7 +142,7 @@ class Recommender:
                         freq_dict[j] = 1
             most_frequent = max(freq_dict, key=freq_dict.get)
             return most_frequent
-
+        
         def frequencies(list):
             ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0, "None": 0}
             ratingString = "Ratings:\n"
@@ -182,7 +183,8 @@ class Recommender:
                     freq_dict[i] = 1
             most_frequent = max(freq_dict, key=freq_dict.get)
             return most_frequent
-
+            
+            
         def mean(list):
             total_sum = 0
             for i in list:
