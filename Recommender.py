@@ -147,7 +147,7 @@ class Recommender:
 
             for i in ratings:
                 if ratings[i] != 0:
-                    ratingString += (i + " " + str((ratings[i] / len(list))*100) + "%\n")
+                    ratingString += (i + " " + f"{float((ratings[i] / len(list))*100):.2f}" + "%\n")
             return ratingString
 
         def mean(list):
@@ -161,7 +161,7 @@ class Recommender:
         print(most_frequent(Director_list))
         print(most_frequent(Actor_list))
         print(most_frequent(Genre_list))
-        return f"{frequencies(Rating_list)}Length: {mean(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prolific Actor: {most_frequent(Actor_list)}\nMost Frequenct Genre: {most_frequent(Genre_list)}"
+        return f"{frequencies(Rating_list)}Average Length: {mean(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prolific Actor: {most_frequent(Actor_list)}\nMost Frequenct Genre: {most_frequent(Genre_list)}"
 
     def getTVStats(self):
         Rating_list, Duration_List, Actor_list, Genre_list = [], [], [], []
