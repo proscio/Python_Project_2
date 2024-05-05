@@ -43,20 +43,15 @@ class Recommender:
             for line in associationFile:
                 value = line.strip().split(",")
                 if value[0] not in self.__associations:
-                    self.__associations[value[0]] = {value[1]: 1}
+                    self.__associations[value[0]] = [value[1]]
                 else:
-                    if value[1] in self.__associations[value[0]]:
-                        self.__associations[value[0]][value[1]] += 1
-                    else:
-                        self.__associations[value[0]][value[1]] = 1
+                    self.__associations[value[0]].append(value[1])
+                    
                 if value[1] not in self.__associations:
-                    self.__associations[value[1]] = {value[0]: 1}
+                    self.__associations[value[1]] = [value[0]]
                 else:
-                    if value[0] in self.__associations[value[1]]:
-                        self.__associations[value[1]][value[0]] += 1
-                    else:
-                        self.__associations[value[1]][value[0]] = 1
-
+                    self.__associations[value[1]].append(value[0])
+                    
     def getMovieList(self):
         string = ""
         width = 0
@@ -265,7 +260,7 @@ class Recommender:
                     results += f"Title: {show.getTitle()}\n"
                     results += f"Director: {show.getDirectors()}\n"
                     results += f"Actors: {show.getActors()}\n"
-                    results += f"Genre: {show.getGenres()}\n"
+                    results += f"Genre: {show.getGenres()}\n\n"
         if not results:
             return "No Results"
         return results
@@ -296,11 +291,13 @@ class Recommender:
     def getRecommendations(self, type, title):
         if type == "Movie" or type == "TV Show":
             show_id = None
+            print("Type was movie/show") #DEBUG
             for show_id, show in self.__shows.items():
                 if show.getTypeShow() == type and show.getTitle().lower() == title.lower():
                     break
             else:
                 messagebox.showwarning("Warning", f"No recommendations found for {title}.")
+                print("First warning") #DEBUG
                 return "No Results"
 
             recommendations = self.__associations.get(show_id, [])
