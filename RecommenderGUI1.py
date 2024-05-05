@@ -8,6 +8,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class RecommenderGUI:
     def __init__(self, main):
+    """
+    This class creates a GUI for a Media Recommender system.
+    It uses the tkinter library for the GUI and a Recommender object for the recommendation logic.
+    """
         self.main = main
         self.main.title("Media Recommender")
         self.main.geometry("1200x800")
@@ -52,6 +56,11 @@ class RecommenderGUI:
 
 
     def update_tabs(self):
+        """
+        Updates the tabs by creating them and loading the data.
+
+        :return: None
+        """
         try:
             self.create_tab(self.tab1, "Movies", self.recommender.getMovieList(), self.recommender.getMovieStats())
         except:
@@ -71,6 +80,17 @@ class RecommenderGUI:
         self.getRecommendations()
 
     def create_tab(self, tab, tab_name, data_list, stats):
+         """
+        Create a tab in the notebook.
+        :param tab: The tab to be created.
+        :type tab: ttk.Frame
+        :param tab_name: The name of the tab.
+        :type tab_name: str
+        :param data_list: The list of data to be displayed in the tab.
+        :type data_list: str
+        :param stats: The statistics to be displayed in the tab.
+        :type stats: str
+        """
         tab.grid_columnconfigure(0, weight=1)
         tab.grid_rowconfigure(0, weight=1)
         tab.grid_rowconfigure(1, weight=1)
@@ -88,7 +108,11 @@ class RecommenderGUI:
         text_area2.configure(state='disabled')
 
     def search_TVMovies(self):
+        """
+        Creates the "Search TV/Movies" tab.
 
+        :return: None
+        """
         self.tab4.grid_columnconfigure(0, weight=1)
         self.tab4.grid_columnconfigure(1, weight=1)
         self.tab4.grid_columnconfigure(2, weight=1)
@@ -124,6 +148,10 @@ class RecommenderGUI:
         genre_entry.grid(row=4, column=0, padx=10, pady=10)
 
         def perform_search():
+            """
+            Perform the search based on the user's input.
+            This function is called when the user clicks the Search button.
+            """
             type = type_entry.get()
             title = title_entry.get().lower()
             director = director_entry.get().lower()
@@ -142,6 +170,11 @@ class RecommenderGUI:
 
     
     def search_books(self):
+        """
+        Creates the "Search Books" tab.
+
+        :return: None
+        """
         self.tab5.grid_columnconfigure(0, weight=1)
         self.tab5.grid_columnconfigure(1, weight=1)
         self.tab5.grid_columnconfigure(2, weight=1)
@@ -182,6 +215,11 @@ class RecommenderGUI:
         self.search_results_text.grid(row = 3, column=0, sticky="nsew", columnspan= 3)
 
     def getRecommendations(self):
+        """
+        Creates the "Recommendations" tab.
+
+        :return: None
+        """
         self.tab6.grid_columnconfigure(0, weight=1)
         self.tab6.grid_columnconfigure(1, weight=3)
 
@@ -237,22 +275,50 @@ class RecommenderGUI:
         ax2.set_title('Distribution of TV Show Ratings')
 
     def info(self):
+          """
+        Displays an information message box.
+
+        :return: The return value of the messagebox.showinfo function.
+        :rtype: str
+        """
         return messagebox.showinfo(title="Media for you!", message="Developed for: Engineering Programming Python\nBy: Gage Iannitelli, Rigoberto Perdomo, and Patrick Roscio")
 
     def load_shows(self):
+        """
+        Loads TV shows using the Recommender object and updates the tabs.
+
+        :return: None
+        """
         self.recommender.loadShows()
         self.update_tabs()
         self.RatingsTab()
 
     def load_books(self):
+         """
+        Loads books using the Recommender object and updates the tabs.
+
+        :return: None
+        """
         self.recommender.loadBooks()
         self.update_tabs()
 
     def load_associations(self):
+        """
+        Loads associations using the Recommender object and updates the tabs.
+
+        :return: None
+        """
         self.recommender.loadAssociations()
         self.update_tabs()
 
 def main():
+    """
+    The main function of the program.
+    This function creates a root window and an instance of the RecommenderGUI class,
+    and then starts the main event loop.
+    
+    :return: None
+    """
     root = tk.Tk()
     app = RecommenderGUI(root)
     root.mainloop()
