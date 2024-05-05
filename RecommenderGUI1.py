@@ -3,6 +3,8 @@ from tkinter import ttk
 from tkinter import scrolledtext
 from tkinter import messagebox
 from Recommender import Recommender
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class RecommenderGUI:
     def __init__(self, main):
@@ -33,6 +35,7 @@ class RecommenderGUI:
         self.tab4 = ttk.Frame(self.notebook)
         self.tab5 = ttk.Frame(self.notebook)
         self.tab6 = ttk.Frame(self.notebook)
+        self.tab7 = ttk.Frame(self.notebook)
 
         self.notebook.add(self.tab1, text="Movies")
         self.notebook.add(self.tab2, text="TV Shows")
@@ -40,12 +43,13 @@ class RecommenderGUI:
         self.notebook.add(self.tab4, text="Search Movies/TV")
         self.notebook.add(self.tab5, text="Search Books")
         self.notebook.add(self.tab6, text="Recommendations")
+        self.notebook.add(self.tab7, text="Ratings")
 
         self.notebook.pack(expand=1, fill="both")
 
         # Call the function to create tabs initially
         self.update_tabs()
-        
+
 
     def update_tabs(self):
         try:
@@ -208,14 +212,37 @@ class RecommenderGUI:
         self.search_recommendations_results_text = scrolledtext.ScrolledText(self.tab6)
         self.search_recommendations_results_text.grid(row=3, column=0, columnspan=2, sticky="nsew")
 
+    def RatingsTab(self):
+        for widget in self.tab7.winfo_children():
+            widget.destroy()
 
-    
+        ratings_movies, ratings_tv_shows = (), ()
+        ratings_movies, ratings_tv_shows = self.recommender.Ratings()
+
+        self.tab7.grid_columnconfigure(0, weight=1)
+        self.tab7.grid_rowconfigure(0, weight=1)
+
+        canvas = FigureCanvasTkAgg(Figure(), master=self.tab7)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill='both', expand=True)
+
+        ax1 = canvas.figure.add_subplot(121)
+        sizes1, labels1 = ratings_movies
+        ax1.pie(sizes1, labels=labels1, autopct='%1.1f%%', startangle=140)
+        ax1.set_title('Distribution of Movie Ratings')
+
+        ax2 = canvas.figure.add_subplot(122)
+        sizes2, labels2 = ratings_tv_shows
+        ax2.pie(sizes2, labels=labels2, autopct='%1.1f%%', startangle=140)
+        ax2.set_title('Distribution of TV Show Ratings')
+
     def info(self):
         return messagebox.showinfo(title="Media for you!", message="Developed for: Engineering Programming Python\nBy: Gage Iannitelli, Rigoberto Perdomo, and Patrick Roscio")
 
     def load_shows(self):
         self.recommender.loadShows()
         self.update_tabs()
+        self.RatingsTab()
 
     def load_books(self):
         self.recommender.loadBooks()

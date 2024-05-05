@@ -340,3 +340,30 @@ class Recommender:
             return "No Results"
 
         return results
+
+    def Ratings(self):
+        Rating_list_TVShows = []
+        Rating_list_Movies = []
+        for i in self.__shows:
+            if Show.getTypeShow(self.__shows[i]) == "TV Show":
+                Rating_list_TVShows.append(Show.getRating(self.__shows[i]))
+            if Show.getTypeShow(self.__shows[i]) == "Movie":
+                Rating_list_Movies.append(Show.getRating(self.__shows[i]))
+        def create_pie_chart(Rating_list):
+            rating_counts = {}
+            total_ratings = 0
+            for rating in Rating_list:
+                if rating == '' or rating == 'TV-NR':
+                    rating = "NR"
+                if rating in rating_counts:
+                    rating_counts[rating] += 1
+                else:
+                    rating_counts[rating] = 1
+                total_ratings += 1
+
+            percentages = {rating: (count / total_ratings) * 100 for rating, count in rating_counts.items()}
+
+            labels = list(percentages.keys())
+            sizes = list(percentages.values())
+            return sizes, labels
+        return create_pie_chart(Rating_list_Movies), create_pie_chart(Rating_list_TVShows)
