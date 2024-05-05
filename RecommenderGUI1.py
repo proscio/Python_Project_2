@@ -61,6 +61,7 @@ class RecommenderGUI:
             self.create_tab(self.tab3, "Books", self.recommender.getBookList(), self.recommender.getBookStats())
         except:
             self.create_tab(self.tab3, "Books", "No Values Loaded", "No Values Loaded")
+        self.search_books()
 
     def create_tab(self, tab, tab_name, data_list, stats):
         tab.grid_columnconfigure(0, weight=1)
@@ -78,6 +79,46 @@ class RecommenderGUI:
 
         text_area2.insert('end', stats)
         text_area2.configure(state='disabled')
+
+    def search_books(self):
+        self.tab5.grid_columnconfigure(0, weight=1)
+        self.tab5.grid_columnconfigure(1, weight=1)
+        self.tab5.grid_columnconfigure(2, weight=1)
+
+        self.tab5.grid_rowconfigure(0, weight=1)
+        self.tab5.grid_rowconfigure(1, weight=1)
+        self.tab5.grid_rowconfigure(2, weight=1)
+        self.tab5.grid_rowconfigure(3, weight=1)
+
+        title_label = tk.Label(self.tab5, text="Title:")
+        title_label.grid(row=0, column=0, padx=5, pady=5, sticky = 'w')
+        title_entry = tk.Entry(self.tab5, width=10,)
+        title_entry.grid(row =0, column=0, padx = 10, pady = 10)
+        
+        
+        author_label = tk.Label(self.tab5, text="Author:")
+        author_label.grid(row=1, column=0, padx=5, pady=5, sticky = 'w')
+        author_entry = tk.Entry(self.tab5, width=10)
+        author_entry.grid(row =1, column=0, padx = 10, pady = 10)
+
+        publisher_label = tk.Label(self.tab5, text = "Publisher")
+        publisher_label.grid(row=2, column=0, padx=5, pady=5, sticky = 'w')
+        publisher_entry = tk.Entry(self.tab5, width=10)
+        publisher_entry.grid(row =2, column=0, padx = 10, pady = 10)
+
+        def perform_search():
+            title = title_entry.get().lower()
+            author = author_entry.get().lower()
+            publisher = publisher_entry.get().lower()
+            search_results = self.recommender.searchBooks(title=title, author=author, publisher=publisher)
+            self.search_results_text.delete('1.0', 'end')
+            self.search_results_text.insert('end', search_results)
+
+        search_button = tk.Button(self.tab5, text="Search", command=perform_search)
+        search_button.grid(row = 2,column=1, sticky="w", padx = 10, pady = 10)
+
+        self.search_results_text = scrolledtext.ScrolledText(self.tab5)
+        self.search_results_text.grid(row = 3, column=0, sticky="nsew", columnspan= 3)
 
     def info(self):
         return messagebox.showinfo(title="Media for you!", message="Developed for: Engineering Programming Python\nBy: Gage Iannitelli, Rigoberto Perdomo, and Patrick Roscio")
