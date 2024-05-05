@@ -251,6 +251,11 @@ class RecommenderGUI:
         self.search_recommendations_results_text.grid(row=3, column=0, columnspan=2, sticky="nsew")
 
     def RatingsTab(self):
+        """
+        This method creates the "Ratings" tab in the GUI. It displays pie charts for the distribution of movie and TV show ratings.
+    
+        :return: None
+        """
         for widget in self.tab7.winfo_children():
             widget.destroy()
 
