@@ -64,6 +64,7 @@ class RecommenderGUI:
             self.create_tab(self.tab3, "Books", "No Values Loaded", "No Values Loaded")
         self.search_books()
         self.search_TVMovies()
+        self.getRecommendations()
 
     def create_tab(self, tab, tab_name, data_list, stats):
         tab.grid_columnconfigure(0, weight=1)
@@ -82,7 +83,7 @@ class RecommenderGUI:
         text_area2.insert('end', stats)
         text_area2.configure(state='disabled')
 
-        def search_TVMovies(self):
+    def search_TVMovies(self):
 
         self.tab4.grid_columnconfigure(0, weight=1)
         self.tab4.grid_columnconfigure(1, weight=1)
@@ -176,6 +177,38 @@ class RecommenderGUI:
         self.search_results_text = scrolledtext.ScrolledText(self.tab5)
         self.search_results_text.grid(row = 3, column=0, sticky="nsew", columnspan= 3)
 
+    def getRecommendations(self):
+        self.tab6.grid_columnconfigure(0, weight=1)
+        self.tab6.grid_columnconfigure(1, weight=3)
+
+        self.tab6.grid_rowconfigure(0, weight=1)
+        self.tab6.grid_rowconfigure(1, weight=1)
+        self.tab6.grid_rowconfigure(2, weight=1)
+
+        type_label = tk.Label(self.tab6, text="Type:")
+        type_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
+        type_entry = ttk.Combobox(self.tab6, values=["Movie", "TV Show"], width=15)
+        type_entry.grid(row=0, column=0, padx=10, pady=10)
+
+        title_label = tk.Label(self.tab6, text="Title:")
+        title_label.grid(row=1, column=0, padx=5, pady=5, sticky='w')
+        title_entry = tk.Entry(self.tab6, width=20)
+        title_entry.grid(row=1, column=0, padx=10, pady=10)
+
+        def perform_search():
+            type = type_entry.get()
+            title = title_entry.get().lower()
+            search_results = self.recommender.getRecommendations(type=type, title=title)
+            self.search_results_text.delete('1.0', 'end')
+            self.search_results_text.insert('end', search_results)
+
+        search_button = tk.Button(self.tab6, text="Get Recommendations", command=perform_search)
+        search_button.grid(row=2, column=0, sticky="w", padx=10, pady=10)
+
+        self.search_results_text = scrolledtext.ScrolledText(self.tab6)
+        self.search_results_text.grid(row=3, column=0, columnspan=2, sticky="nsew")
+
+    
     def info(self):
         return messagebox.showinfo(title="Media for you!", message="Developed for: Engineering Programming Python\nBy: Gage Iannitelli, Rigoberto Perdomo, and Patrick Roscio")
 
