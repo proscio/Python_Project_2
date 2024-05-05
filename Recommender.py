@@ -10,7 +10,13 @@ class Recommender:
         self.__shows = {}
         self.__associations = {}
 
+    def clearData(self):
+        self.__books = {}
+        self.__shows = {}
+        self.__associations = {}
+
     def loadBooks(self):
+        self.clearData()
         file = filedialog.askopenfilename(title="Book File", initialdir=os.getcwd())
         with open(file, "r") as bookFile:
             next(bookFile)
@@ -21,7 +27,9 @@ class Recommender:
                                publicationDate=value[9], publisher=value[10])
                 self.__books[value[0]] = newBook
 
+
     def loadShows(self):
+        self.clearData()
         file = filedialog.askopenfilename(title="Show File", initialdir=os.getcwd())
         with open(file, "r") as showFile:
             next(showFile)
@@ -35,6 +43,7 @@ class Recommender:
                 self.__shows[value[0]] = newShow
 
     def loadAssociations(self):
+        self.clearData()
         file = filedialog.askopenfilename(title="Association File", initialdir=os.getcwd())
         with open(file, "r") as associationFile:
             for line in associationFile:
@@ -125,17 +134,18 @@ class Recommender:
                 Director_list.append(str(Show.getDirectors(self.__shows[i])).strip().split("\\"))
                 Actor_list.append(str(Show.getActors(self.__shows[i])).strip().split("\\"))
                 Genre_list.append(str(Show.getGenres(self.__shows[i])).strip().split("\\"))
+
         def most_frequent(list):
             freq_dict = {}
             for i in list:
                 for j in i:
-                    if j in freq_dict:
-                        freq_dict[j] += 1
-                    else:
-                        freq_dict[j] = 1
+                    if j.strip():
+                        if j in freq_dict:
+                            freq_dict[j] += 1
+                        else:
+                            freq_dict[j] = 1
                 most_frequent = max(freq_dict, key=freq_dict.get)
             return most_frequent
-         
 
         def frequencies(list):
             ratings = {"R": 0, "ALL": 0, "18+": 0, "7+": 0, "13+": 0, "16+": 0, "None": 0, "NR": 0, "PG-13": 0, "G": 0, "PG": 0, "AGES_16_": 0}
@@ -153,15 +163,10 @@ class Recommender:
         def mean(list):
             total_sum = 0
             for i in list:
-                h = int(i.split(' ')[0])
-                total_sum += h
+                total_sum += int(i.split(' ')[0])
             average = total_sum / len(list)
             return average
-
-        print(most_frequent(Director_list))
-        print(most_frequent(Actor_list))
-        print(most_frequent(Genre_list))
-        return f"{frequencies(Rating_list)}Average Length: {mean(Duration_List): .2f}\nMost Prominent Director: {most_frequent(Director_list)}\nMost Prolific Actor: {most_frequent(Actor_list)}\nMost Frequenct Genre: {most_frequent(Genre_list)}"
+        return f"{frequencies(Rating_list)}\nAverage Movie Duration:{mean(Duration_List): .2f} minutes\n\nMost Prolific Director: {most_frequent(Director_list)}\n\nMost Prolific Actor: {most_frequent(Actor_list)}\n\nMost Frequent Genre: {most_frequent(Genre_list)}"
 
     def getTVStats(self):
         Rating_list, Duration_List, Actor_list, Genre_list = [], [], [], []
@@ -182,7 +187,7 @@ class Recommender:
                         freq_dict[j] = 1
             most_frequent = max(freq_dict, key=freq_dict.get)
             return most_frequent
-        
+
         def frequencies(list):
             ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0, "None": 0}
             ratingString = f"Ratings:\n"
