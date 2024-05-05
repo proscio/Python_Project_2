@@ -187,7 +187,7 @@ class RecommenderGUI:
 
         type_label = tk.Label(self.tab6, text="Type:")
         type_label.grid(row=0, column=0, padx=5, pady=5, sticky='w')
-        type_entry = ttk.Combobox(self.tab6, values=["Movie", "TV Show"], width=15)
+        type_entry = ttk.Combobox(self.tab6, values=["Movie", "TV Show", "Book"], width=15)
         type_entry.grid(row=0, column=0, padx=10, pady=10)
 
         title_label = tk.Label(self.tab6, text="Title:")
