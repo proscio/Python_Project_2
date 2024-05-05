@@ -127,14 +127,14 @@ class RecommenderGUI:
             genre = genre_entry.get().lower()
             search_results = self.recommender.searchTVMovies(type=type, title=title, director=director, actor=actor,
                                                              genre=genre)
-            self.search_results_text.delete('1.0', 'end')
-            self.search_results_text.insert('end', search_results)
+            self.search_TVMovies_results_text.delete('1.0', 'end')
+            self.search_TVMovies_results_text.insert('end', search_results)
 
         search_button = tk.Button(self.tab4, text="Search", command=perform_search)
         search_button.grid(row=2, column=1, sticky="w", padx=10, pady=10)
 
-        self.search_results_text = scrolledtext.ScrolledText(self.tab4)
-        self.search_results_text.grid(row=5, column=0, sticky="nsew", columnspan=3)
+        self.search_TVMovies_results_text = scrolledtext.ScrolledText(self.tab4)
+        self.search_TVMovies_results_text.grid(row=5, column=0, sticky="nsew", columnspan=3)
 
     
     def search_books(self):
