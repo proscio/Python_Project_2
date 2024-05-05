@@ -310,7 +310,11 @@ class Recommender:
                     book = self.__books[recommendation_id]
                     results += f"Title: {book.getTitle()}\n"
                     results += f"Author: {book.getAuthors()}\n"
-                    results += f"Publisher: {book.getPublisher()}\n\n"
+                    results += f"Publisher: {book.getPublisher()}\n"
+                    results += f"ISBN: {book.getIsbn()}\n"
+                    results += f"ISBN 13: {book.getIsbn13()}\n"
+                    results += f"Language: {book.getLanguageCode()}\n"
+                    results += f"Date Published: {book.getPublicatinDate()}\n\n"
         elif type == "Book":
             book_id = None
             for book_id, book in self.__books.items():
@@ -331,7 +335,12 @@ class Recommender:
                     results += f"Title: {show.getTitle()}\n"
                     results += f"Director: {show.getDirectors()}\n"
                     results += f"Actors: {show.getActors()}\n"
-                    results += f"Genre: {show.getGenres()}\n\n"
+                    results += f"Genre: {show.getGenres()}\n"
+                    results += f"Country: {show.getCountryCode()}\n"
+                    results += f"Date Aired: {show.getDateAired()}\n"
+                    results += f"Release Year: {show.getReleaseYear()}\n"
+                    results += f"Rating: {show.getRating()}\n"
+                    results += f"Duration: {show.getDuration()}\n\n"
         else:
             messagebox.showerror("Error", "Invalid type. Please specify 'Movie', 'TV Show', or 'Book'.")
             return "No Results"
