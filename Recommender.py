@@ -176,6 +176,8 @@ class Recommender:
             freq_dict = {}
             for i in list:
                 for j in i:
+                    if j == '' or j == '1':
+                        continue
                     if j in freq_dict:
                         freq_dict[j] += 1
                     else:
@@ -187,7 +189,6 @@ class Recommender:
             ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0, "None": 0, "NR": 0, "TV-MA": 0}
             ratingString = f"Ratings:\n"
             for i in list:
-                print(i)
                 if i == "" or i == "NR":
                     i = 'None'
                 ratings[i] += 1
@@ -211,18 +212,25 @@ class Recommender:
         PageCount_list, Author_list, Publisher_list = [], [], []
         for i in self.__books:
             PageCount_list.append(Book.getPageCount(self.__books[i]))
-            Author_list.append(Book.getAuthors(self.__books[i]))
+            Author_list.append(str(Book.getAuthors(self.__books[i])).strip().split("\\"))
             Publisher_list.append(Book.getPublisher(self.__books[i]))
-        print(Author_list)
+
+        def most_frequent_authors(list):
+            freq_dict = {}
+            for j in list:
+                for i in j:
+                    if i in freq_dict:
+                        freq_dict[i] += 1
+                    else:
+                        freq_dict[i] = 1
+            most_frequent = max(freq_dict, key=freq_dict.get)
+            return most_frequent
 
         def most_frequent(list):
             freq_dict = {}
-            print(list)
             for i in list:
-                print(i)
                 if i in freq_dict:
                     freq_dict[i] += 1
-                    print(freq_dict[i])
                 else:
                     freq_dict[i] = 1
             most_frequent = max(freq_dict, key=freq_dict.get)
@@ -235,7 +243,7 @@ class Recommender:
             average = total_sum / len(list)
             return average
 
-        return f"Average Page Count:{mean(PageCount_list): .2f} pages\n\nMost Prolific Author: {most_frequent(Author_list)}\n\nMost Prolific Publisher: {most_frequent(Publisher_list)}"
+        return f"Average Page Count:{mean(PageCount_list): .2f} pages\n\nMost Prolific Author: {most_frequent_authors(Author_list)}\n\nMost Prolific Publisher: {most_frequent(Publisher_list)}"
 
     def searchTVMovies(self, type, title, director, actor, genre):
         if type not in ["Movie", "TV Show"]:
