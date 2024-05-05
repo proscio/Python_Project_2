@@ -199,14 +199,15 @@ class RecommenderGUI:
             type = type_entry.get()
             title = title_entry.get().lower()
             search_results = self.recommender.getRecommendations(type=type, title=title)
-            self.search_results_text.delete('1.0', 'end')
-            self.search_results_text.insert('end', search_results)
+            self.search_recommendations_results_text.delete('1.0', 'end')
+            self.search_recommendations_results_text.insert('end', search_results)
 
         search_button = tk.Button(self.tab6, text="Get Recommendations", command=perform_search)
         search_button.grid(row=2, column=0, sticky="w", padx=10, pady=10)
 
-        self.search_results_text = scrolledtext.ScrolledText(self.tab6)
-        self.search_results_text.grid(row=3, column=0, columnspan=2, sticky="nsew")
+        self.search_recommendations_results_text = scrolledtext.ScrolledText(self.tab6)
+        self.search_recommendations_results_text.grid(row=3, column=0, columnspan=2, sticky="nsew")
+
 
     
     def info(self):
