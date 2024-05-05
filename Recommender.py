@@ -189,18 +189,16 @@ class Recommender:
             return most_frequent
 
         def frequencies(list):
-            ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0, "None": 0}
+            ratings = {"7+": 0, "TV-14": 0, "13+": 0, "TV-Y": 0, "ALL": 0, "TV-NR": 0, "18+": 0, "TV-Y7": 0, "16+": 0, "TV-G": 0, "TV-PG": 0, "None": 0, "PG": 0}
             ratingString = f"Ratings:\n"
             for i in list:
-                if i == 'PG':
-                    i = 'TV-PG'
                 if i == '' or 'NR':
                     i = 'None'
                 ratings[i] += 1
 
             for i in ratings:
                 if ratings[i] != 0:
-                    ratingString += (i + " " + str((ratings[i] / len(ratings))) + "%\n")
+                    ratingString += (i + " " + f"{float((ratings[i] / len(ratings))*100):.2f}" + "%\n")
             return ratingString
 
         def mean(list):
