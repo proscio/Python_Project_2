@@ -250,17 +250,36 @@ class Recommender:
             return "No Results"
 
         results = ""
-        for show_id, show in self.__shows.items():
-            if (type == "Movie" and show.getTypeShow() == "Movie") or (type == "TV Show" and show.getTypeShow() == "TV Show"):
-                if (not title or title.lower() in show.getTitle().lower()) and \
-                   (not director or director.lower() in show.getDirectors().lower()) and \
-                   (not actor or actor.lower() in show.getActors().lower()) and \
-                   (not genre or genre.lower() in show.getGenres().lower()):
+        # Store the maximum lengths of each column
+        max_lengths = {"Title": len("Title"), "Director": len("Director"), "Actors": len("Actors"),
+                       "Genre": len("Genre")}
 
-                    results += f"Title: {show.getTitle()}\n"
-                    results += f"Director: {show.getDirectors()}\n"
-                    results += f"Actors: {show.getActors()}\n"
-                    results += f"Genre: {show.getGenres()}\n\n"
+        for show_id, show in self.__shows.items():
+            if (type == "Movie" and show.getTypeShow() == "Movie") or (
+                    type == "TV Show" and show.getTypeShow() == "TV Show"):
+                if (not title or title.lower() in show.getTitle().lower()) and \
+                        (not director or director.lower() in show.getDirectors().lower()) and \
+                        (not actor or actor.lower() in show.getActors().lower()) and \
+                        (not genre or genre.lower() in show.getGenres().lower()):
+                    # Update maximum lengths for each column
+                    max_lengths["Title"] = max(max_lengths["Title"], len(show.getTitle()))
+                    max_lengths["Director"] = max(max_lengths["Director"], len(show.getDirectors()))
+                    max_lengths["Actors"] = max(max_lengths["Actors"], len(show.getActors()))
+                    max_lengths["Genre"] = max(max_lengths["Genre"], len(show.getGenres()))
+
+        # Format header with even columns
+        results += f"{'Title':<{max_lengths['Title']}}  {'Director':<{max_lengths['Director']}}  {'Actors':<{max_lengths['Actors']}}  {'Genre':<{max_lengths['Genre']}}\n"
+
+        for show_id, show in self.__shows.items():
+            if (type == "Movie" and show.getTypeShow() == "Movie") or (
+                    type == "TV Show" and show.getTypeShow() == "TV Show"):
+                if (not title or title.lower() in show.getTitle().lower()) and \
+                        (not director or director.lower() in show.getDirectors().lower()) and \
+                        (not actor or actor.lower() in show.getActors().lower()) and \
+                        (not genre or genre.lower() in show.getGenres().lower()):
+                    # Format each entry with even columns
+                    results += f"{show.getTitle():<{max_lengths['Title']}}  {show.getDirectors():<{max_lengths['Director']}}  {show.getActors():<{max_lengths['Actors']}}  {show.getGenres():<{max_lengths['Genre']}}\n"
+
         if not results:
             return "No Results"
         return results
@@ -271,17 +290,35 @@ class Recommender:
             return "No Results"
 
         results = ""
+        # Store the maximum lengths of each column
+        max_lengths = {"Title": len("Title"), "Author": len("Author"), "Publisher": len("Publisher")}
+
         for book_id, book in self.__books.items():
-            if title not in Book.getTitle(book).lower():
+            if title and title.lower() not in Book.getTitle(book).lower():
                 continue
-            elif author not in Book.getAuthors(book).lower():
+            elif author and author.lower() not in Book.getAuthors(book).lower():
                 continue
-            elif publisher not in Book.getPublisher(book).lower():
+            elif publisher and publisher.lower() not in Book.getPublisher(book).lower():
                 continue
 
-            results += f"Title: {Book.getTitle(book)}\n"
-            results += f"Author: {Book.getAuthors(book)}\n"
-            results += f"Publisher: {Book.getPublisher(book)}\n\n"
+            # Update maximum lengths for each column
+            max_lengths["Title"] = max(max_lengths["Title"], len(Book.getTitle(book)))
+            max_lengths["Author"] = max(max_lengths["Author"], len(Book.getAuthors(book)))
+            max_lengths["Publisher"] = max(max_lengths["Publisher"], len(Book.getPublisher(book)))
+
+        # Format header with even columns
+        results += f"{'Title':<{max_lengths['Title']}}  {'Author':<{max_lengths['Author']}}  {'Publisher':<{max_lengths['Publisher']}}\n"
+
+        for book_id, book in self.__books.items():
+            if title and title.lower() not in Book.getTitle(book).lower():
+                continue
+            elif author and author.lower() not in Book.getAuthors(book).lower():
+                continue
+            elif publisher and publisher.lower() not in Book.getPublisher(book).lower():
+                continue
+
+            # Format each entry with even columns
+            results += f"{Book.getTitle(book):<{max_lengths['Title']}}  {Book.getAuthors(book):<{max_lengths['Author']}}  {Book.getPublisher(book):<{max_lengths['Publisher']}}\n"
 
         if not results:
             return "No Results"
