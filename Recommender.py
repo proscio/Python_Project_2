@@ -5,12 +5,21 @@ from Book import Book
 from Show import Show
 
 class Recommender:
+    """
+    The Recommender class represents a media recommendation system, managing a collection of books, movies and TV shows, and provides methods for loading and retrieving data.
+    """
     def __init__(self):
+        """
+        Initialize a Recommender object.
+        """
         self.__books = {}
         self.__shows = {}
         self.__associations = {}
 
     def loadBooks(self):
+        """
+        Load book data from a csv file selected by the user.
+        """
         self.__books = {}
         file = filedialog.askopenfilename(title="Book File", initialdir=os.getcwd())
         with open(file, "r") as bookFile:
@@ -23,6 +32,9 @@ class Recommender:
                 self.__books[value[0]] = newBook
 
     def loadShows(self):
+        """
+        Load show data from a csv file selected by the user.
+        """
         self.__shows = {}
         file = filedialog.askopenfilename(title="Show File", initialdir=os.getcwd())
         with open(file, "r") as showFile:
@@ -37,6 +49,9 @@ class Recommender:
                 self.__shows[value[0]] = newShow
 
     def loadAssociations(self):
+        """
+        Load association data from a file selected by the user.
+        """
         self.__associations = {}
         file = filedialog.askopenfilename(title="Association File", initialdir=os.getcwd())
         with open(file, "r") as associationFile:
@@ -53,6 +68,12 @@ class Recommender:
                     self.__associations[value[1]].append(value[0])
                     
     def getMovieList(self):
+        """
+        Get a formatted string of all movies in the collection.
+        
+        :return: A string of all movies in the collection.
+        :rtype: str
+        """
         string = ""
         width = 0
         for i in self.__shows:
@@ -75,6 +96,12 @@ class Recommender:
 
 
     def getTVList(self):
+        """
+        Get a formatted string of all TV shows in the collection.
+        
+        :return: A string of all TV shows in the collection.
+        :rtype: str
+        """
         string = ""
         width = 0
         for i in self.__shows:
@@ -96,6 +123,12 @@ class Recommender:
         return string
 
     def getBookList(self):
+        """
+        Get a formatted string of all books in the collection.
+        
+        :return: A string of all books in the collection.
+        :rtype: str
+        """
         string = ""
         width = 0
         for i in self.__books:
@@ -115,6 +148,12 @@ class Recommender:
         return string
 
     def getMovieStats(self):
+        """
+        Get statistics about the movies in the collection.
+        
+        :return: A string of movie statistics.
+        :rtype: str
+        """
         Rating_list, Duration_List, Director_list, Actor_list, Genre_list = [], [], [], [], []
         for i in self.__shows:
             if Show.getTypeShow(self.__shows[i]) == "Movie":
@@ -159,6 +198,12 @@ class Recommender:
         return f"{frequencies(Rating_list)}\nAverage Movie Duration:{mean(Duration_List): .2f} minutes\n\nMost Prolific Director: {most_frequent(Director_list)}\n\nMost Prolific Actor: {most_frequent(Actor_list)}\n\nMost Frequent Genre: {most_frequent(Genre_list)}"
 
     def getTVStats(self):
+        """
+        Get statistics about the TV shows in the collection.
+        
+        :return: A string of TV show statistics.
+        :rtype: str
+        """
         Rating_list, Duration_List, Actor_list, Genre_list = [], [], [], []
         for i in self.__shows:
             if Show.getTypeShow(self.__shows[i]) == "TV Show":
@@ -204,6 +249,12 @@ class Recommender:
         return f"{frequencies(Rating_list)}\nAverage Number of Seasons: {mean(Duration_List): .2f} seasons\n\nMost Prolific Actor: {most_frequent(Actor_list)}\n\nMost Frequent Genre: {most_frequent(Genre_list)}"
 
     def getBookStats(self):
+        """
+        Get statistics about the books in the collection.
+        
+        :return: A string of book statistics.
+        :rtype: str
+        """
         PageCount_list, Author_list, Publisher_list = [], [], []
         for i in self.__books:
             PageCount_list.append(Book.getPageCount(self.__books[i]))
@@ -241,6 +292,22 @@ class Recommender:
         return f"Average Page Count:{mean(PageCount_list): .2f} pages\n\nMost Prolific Author: {most_frequent_authors(Author_list)}\n\nMost Prolific Publisher: {most_frequent(Publisher_list)}"
 
     def searchTVMovies(self, type, title, director, actor, genre):
+        """
+        Search for TV shows or movies in the collection that match the given criteria.
+        
+        :param type: The type of the show ("Movie" or "TV Show").
+        :type type: str
+        :param title: The title of the show.
+        :type title: str
+        :param director: The director of the show.
+        :type director: str
+        :param actor: An actor in the show.
+        :type actor: str
+        :param genre: The genre of the show.
+        :type genre: str
+        :return: A formatted string of shows that match the criteria, or "No Results" if no matches are found.
+        :rtype: str
+        """
         if type not in ["Movie", "TV Show"]:
             messagebox.showerror("Error", "Please select 'Movie' or 'TV Show' from Type.")
             return "No Results"
@@ -285,6 +352,18 @@ class Recommender:
         return results
 
     def searchBooks(self, title, author, publisher):
+        """
+        Search for books in the collection that match the given criteria.
+        
+        :param title: The title of the book.
+        :type title: str
+        :param author: The author of the book.
+        :type author: str
+        :param publisher: The publisher of the book.
+        :type publisher: str
+        :return: A formatted string of books that match the criteria, or "No Results" if no matches are found.
+        :rtype: str
+        """
         if not (title or author or publisher):
             messagebox.showerror("Error", "Please enter information for Title, Author, and/or Publisher.")
             return "No Results"
@@ -326,6 +405,16 @@ class Recommender:
 
 
     def getRecommendations(self, type, title):
+        """
+        Get recommendations for similar media items based on the given type and title.
+        
+        :param type: The type of the media item ("Movie", "TV Show", or "Book").
+        :type type: str
+        :param title: The title of the media item.
+        :type title: str
+        :return: A formatted string of recommended media items, or "No Results" if no recommendations are found.
+        :rtype: str
+        """
         if type == "Movie" or type == "TV Show":
             show_id = None
             print("Type was movie/show") #DEBUG
@@ -385,6 +474,12 @@ class Recommender:
         return results
 
     def Ratings(self):
+        """
+        This method generates the data for pie charts of ratings for TV Shows and Movies.
+    
+        :return: Two tuples, each containing a list of sizes and a list of labels for the pie charts.
+        :rtype: tuple
+        """
         Rating_list_TVShows = []
         Rating_list_Movies = []
         for i in self.__shows:
@@ -393,6 +488,14 @@ class Recommender:
             if Show.getTypeShow(self.__shows[i]) == "Movie":
                 Rating_list_Movies.append(Show.getRating(self.__shows[i]))
         def create_pie_chart(Rating_list):
+            """
+            This helper function generates the sizes and labels for a pie chart based on a list of ratings.
+        
+            :param Rating_list: A list of ratings.
+            :type Rating_list: list
+            :return: A tuple containing a list of sizes and a list of labels for the pie chart.
+            :rtype: tuple
+            """
             rating_counts = {}
             total_ratings = 0
             for rating in Rating_list:
