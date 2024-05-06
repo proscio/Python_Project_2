@@ -286,7 +286,7 @@ class RecommenderGUI:
         :return: The return value of the messagebox.showinfo function.
         :rtype: str
         """
-        return messagebox.showinfo(title="Media for you!", message="Developed for: Engineering Programming Python\nBy: Gage Iannitelli, Rigoberto Perdomo, and Patrick Roscio")
+        return messagebox.showinfo(title="Media for you!", message="Developed for: Engineering Programming Python\nBy: Gage Iannitelli, Rigoberto Perdomo, and Patrick Roscio\n Date finished: 5-5-2024")
 
     def load_shows(self):
         """
