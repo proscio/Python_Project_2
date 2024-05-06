@@ -1,5 +1,5 @@
 class Media:
-     """
+    """
     The Media class represents a general media item with an ID, title, and average rating.
     """
     def __init__(self, id, title, averageRating):
@@ -65,7 +65,7 @@ class Media:
         self.__title = Title
 
     def setAverageRating(self, averageRating):
-         """
+        """
         Set the average rating of the media item.
         
         :param averageRating: The new average rating for the media item.

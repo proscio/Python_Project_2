@@ -347,7 +347,7 @@ class Recommender:
                     # Format each entry with even columns
                     results += f"{show.getTitle():<{max_lengths['Title']}}  {show.getDirectors():<{max_lengths['Director']}}  {show.getActors():<{max_lengths['Actors']}}  {show.getGenres():<{max_lengths['Genre']}}\n"
 
-        if not results:
+        if results.strip() == "Title  Director  Actors  Genre":
             return "No Results"
         return results
 
@@ -399,7 +399,7 @@ class Recommender:
             # Format each entry with even columns
             results += f"{Book.getTitle(book):<{max_lengths['Title']}}  {Book.getAuthors(book):<{max_lengths['Author']}}  {Book.getPublisher(book):<{max_lengths['Publisher']}}\n"
 
-        if not results:
+        if results.strip() == "Title  Author  Publisher":
             return "No Results"
         return results
 

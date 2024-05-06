@@ -8,10 +8,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 class RecommenderGUI:
     def __init__(self, main):
-    """
-    This class creates a GUI for a Media Recommender system.
-    It uses the tkinter library for the GUI and a Recommender object for the recommendation logic.
-    """
+        """
+        This class creates a GUI for a Media Recommender system.
+        It uses the tkinter library for the GUI and a Recommender object for the recommendation logic.
+        """
         self.main = main
         self.main.title("Media Recommender")
         self.main.geometry("1200x800")
@@ -80,7 +80,7 @@ class RecommenderGUI:
         self.getRecommendations()
 
     def create_tab(self, tab, tab_name, data_list, stats):
-         """
+        """
         Create a tab in the notebook.
         :param tab: The tab to be created.
         :type tab: ttk.Frame
@@ -280,7 +280,7 @@ class RecommenderGUI:
         ax2.set_title('Distribution of TV Show Ratings')
 
     def info(self):
-          """
+        """
         Displays an information message box.
 
         :return: The return value of the messagebox.showinfo function.
@@ -299,7 +299,7 @@ class RecommenderGUI:
         self.RatingsTab()
 
     def load_books(self):
-         """
+        """
         Loads books using the Recommender object and updates the tabs.
 
         :return: None
